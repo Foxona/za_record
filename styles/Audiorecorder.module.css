@@ -1,0 +1,12 @@
+.recordControls {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  justify-content: center;
+  align-items: center;
+}
+
+.controlButtons {
+  display: flex;
+  gap: 2em;
+}
