@@ -1,10 +1,29 @@
 import type { NextPage } from "next";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "../styles/Audiorecorder.module.css";
 import useRecorder from "./hooks/useRecorder";
 
 const AudioRecorder = () => {
-  let [audioURL, isRecording, startRecording, stopRecording] = useRecorder();
+  let {audioURL, isRecording, startRecording, stopRecording, blob} =
+    useRecorder();
+
+  useEffect(() => {
+    console.log(blob);
+
+    if (blob) {
+      var formData = new FormData();
+      // downloadBlob(audioURL);
+      formData.append("booze", blob, "booze.ogg");
+      fetch("/speech", {
+        body: formData,
+        method: "POST",
+        mode: "no-cors",
+      })
+        .then((response) => response)
+        .then((data) => console.log(data));
+    }
+  }, [audioURL, blob]);
+
   return (
     <div className={styled.recordControls}>
       <audio src={audioURL} controls />
@@ -21,11 +40,7 @@ const AudioRecorder = () => {
 };
 
 const AudioTranscript = () => {
-  const [transcriptsText, setTranscriptsText] = useState<string[]>([
-    "Привет",
-    "Как дела я тут нормально",
-    "Ага проверка сообщений",
-  ]);
+  const [transcriptsText, setTranscriptsText] = useState<string[]>([]);
   return (
     <div>
       {transcriptsText.map((text: string, i) => (
