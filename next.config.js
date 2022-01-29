@@ -5,7 +5,7 @@ const nextConfig = {
     return [
       {
         source: '/speech/:path*',
-        destination: 'http://localhost:5000/:path*' // Proxy to Backend
+        destination: 'http://renamon.fedorg.net:5000/:path*' // Proxy to Backend
       }
     ]
   }

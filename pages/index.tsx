@@ -3,13 +3,11 @@ import { useState, useEffect } from "react";
 import styled from "../styles/Audiorecorder.module.css";
 import useRecorder from "./hooks/useRecorder";
 
-const AudioRecorder = () => {
-  let {audioURL, isRecording, startRecording, stopRecording, blob} =
+const AudioRecorder = (props) => {
+  let { audioURL, isRecording, startRecording, stopRecording, blob } =
     useRecorder();
 
   useEffect(() => {
-    console.log(blob);
-
     if (blob) {
       var formData = new FormData();
       // downloadBlob(audioURL);
@@ -19,10 +17,22 @@ const AudioRecorder = () => {
         method: "POST",
         mode: "no-cors",
       })
-        .then((response) => response)
-        .then((data) => console.log(data));
+        .then((response) => response.json())
+        .then((data) => {
+          props.setTranscriptsText([...props.transcriptsText, data.result]);
+        });
     }
-  }, [audioURL, blob]);
+  }, [blob]);
+
+  const audioTranscript = (transcriptsText: string[]) => {
+    return (
+      <div>
+        {transcriptsText.map((text: string, i) => (
+          <p key={i}>{text}</p>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className={styled.recordControls}>
@@ -35,26 +45,23 @@ const AudioRecorder = () => {
           stop recording
         </button>
       </div>
-    </div>
-  );
-};
-
-const AudioTranscript = () => {
-  const [transcriptsText, setTranscriptsText] = useState<string[]>([]);
-  return (
-    <div>
-      {transcriptsText.map((text: string, i) => (
-        <p key={i}>{text}</p>
-      ))}
+      <div>
+        {props.transcriptsText && audioTranscript(props.transcriptsText)}
+      </div>
     </div>
   );
 };
 
 const Home: NextPage = () => {
+  const [transcriptsText, setTranscriptsText] = useState<string[]>([]);
+
   return (
     <div className={styled.container}>
-      <AudioRecorder />
-      <AudioTranscript />
+      <AudioRecorder
+        setTranscriptsText={setTranscriptsText}
+        transcriptsText={transcriptsText}
+      />
+      {/* <AudioTranscript transcriptsText={transcriptsText} /> */}
     </div>
   );
 };
