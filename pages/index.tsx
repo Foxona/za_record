@@ -1,9 +1,10 @@
 import type { NextPage } from "next";
 import { useState, useEffect } from "react";
 import styled from "../styles/Audiorecorder.module.css";
-import useRecorder from "./hooks/useRecorder";
+import useRecorder from "../hooks/useRecorder";
 
-const AudioRecorder = (props) => {
+type AudioRecorderProps = {setTranscriptsText: (_: string[]) => void; transcriptsText: string[]}
+const AudioRecorder = (props: AudioRecorderProps) => {
   let { audioURL, isRecording, startRecording, stopRecording, blob } =
     useRecorder();
 
