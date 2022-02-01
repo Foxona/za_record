@@ -5,12 +5,16 @@ const useRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const [blob, setBlob] = useState<Blob | null>(null);
+  const [microphonePermissons, setMicrophonePermissons] = useState<string>("");
 
   useEffect(() => {
     // Lazily obtain recorder first time we're recording.
     if (recorder === null) {
       if (isRecording) {
-        requestRecorder().then(setRecorder, console.error);
+        requestRecorder(setMicrophonePermissons).then(
+          setRecorder,
+          console.error
+        );
       }
       return;
     }
@@ -22,10 +26,14 @@ const useRecorder = () => {
       recorder.stop();
     }
 
-    setInterval(() => {
-      recorder.stop();
-      recorder.start();
-    }, 13000); // max 15s media file
+    console.log(isRecording);
+
+    // const interval = setInterval(() => {
+    //   recorder.state !== "inactive" && recorder.stop();
+    //   recorder.start();
+    // }, 3000); // max 15s media file
+
+    // !isRecording && clearInterval(interval);
 
     // Obtain the audio when ready.
     const handleData = (e: BlobEvent) => {
@@ -44,10 +52,28 @@ const useRecorder = () => {
   const stopRecording = () => {
     setIsRecording(false);
   };
-  return { audioURL, isRecording, startRecording, stopRecording, blob };
+  return {
+    audioURL,
+    isRecording,
+    startRecording,
+    stopRecording,
+    blob,
+    microphonePermissons,
+  };
 };
 
-async function requestRecorder() {
+async function requestRecorder(setMicrophonePermissons) {
+  const permissionName = "microphone" as PermissionName;
+  navigator.permissions
+    .query({ name: permissionName })
+    .then(function (permissionStatus) {
+      setMicrophonePermissons(permissionStatus.state); // granted, denied, prompt
+
+      permissionStatus.onchange = function () {
+        console.log("Permission changed to " + this.state);
+      };
+    });
+
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   return new MediaRecorder(stream, {
     mimeType: "audio/webm",
