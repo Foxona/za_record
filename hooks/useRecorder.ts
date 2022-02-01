@@ -62,7 +62,7 @@ const useRecorder = () => {
   };
 };
 
-async function requestRecorder(setMicrophonePermissons) {
+async function requestRecorder(setMicrophonePermissons: (_: string) => void) {
   const permissionName = "microphone" as PermissionName;
   navigator.permissions
     .query({ name: permissionName })

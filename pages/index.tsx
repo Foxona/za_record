@@ -8,7 +8,7 @@ import Layout from "../components/Layout";
 
 type Message = { text: string; date: string };
 type AudioRecorderProps = {
-  setTranscriptsText: (_: string[]) => void;
+  setTranscriptsText: (_: Message[]) => void;
   transcriptsText: Message[];
 };
 
@@ -102,10 +102,7 @@ const AudioRecorder = (props: AudioRecorderProps) => {
         <Alert key="denied" variant="warning">
           <div>Вы отключили разрешение микрофона, запись не ведётся.</div>
           <div>
-            <Alert.Link
-              target="_blank"
-              href="https://support.google.com/chrome/answer/2693767?hl=ru&co=GENIE.Platform%3DDesktop"
-            >
+            <Alert.Link href="https://support.google.com/chrome/answer/2693767?hl=ru&co=GENIE.Platform%3DDesktop">
               Как включить разрешение описано здесь
             </Alert.Link>
           </div>
