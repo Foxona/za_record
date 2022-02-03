@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import useInterval from "./useInterval";
 
 const useRecorder = () => {
   const [audioURL, setAudioURL] = useState("");
@@ -26,7 +27,8 @@ const useRecorder = () => {
       recorder.stop();
     }
 
-    console.log(isRecording);
+    // console.log(isRecording);
+    // useInterval(() => {}, 3000)
 
     // const interval = setInterval(() => {
     //   recorder.state !== "inactive" && recorder.stop();

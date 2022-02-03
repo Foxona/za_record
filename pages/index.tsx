@@ -2,9 +2,9 @@ import type { NextPage } from "next";
 import { useState, useEffect } from "react";
 import styled from "../styles/Audiorecorder.module.css";
 import useRecorder from "../hooks/useRecorder";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Row, Alert, ListGroup } from "react-bootstrap";
 import Layout from "../components/Layout";
+import SideBar from "../components/SideBar";
 
 type Message = { text: string; date: string };
 type AudioRecorderProps = {
@@ -61,10 +61,12 @@ const AudioRecorder = (props: AudioRecorderProps) => {
       fetch("/speech", {
         body: formData,
         method: "POST",
-        mode: "no-cors",
       })
         .then((response) => response.json())
         .then((data) => {
+          if (!data.result) {
+            return;
+          }
           props.setTranscriptsText([
             ...props.transcriptsText,
             { text: data.result, date: unixTimeToDate(data.date) },
@@ -142,16 +144,19 @@ const Home: NextPage = () => {
   const [transcriptsText, setTranscriptsText] = useState<Message[]>([]);
 
   return (
-    <Layout>
-      <Row className="justify-content-md-center">
-        <div className="bg-light border">
-          <AudioRecorder
-            setTranscriptsText={setTranscriptsText}
-            transcriptsText={transcriptsText}
-          />
-        </div>
-      </Row>
-    </Layout>
+    <>
+      {/* <SideBar /> */}
+      <Layout>
+        <Row className="justify-content-md-center">
+          <div className="bg-light border">
+            <AudioRecorder
+              setTranscriptsText={setTranscriptsText}
+              transcriptsText={transcriptsText}
+            />
+          </div>
+        </Row>
+      </Layout>
+    </>
   );
 };
 
