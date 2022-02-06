@@ -1,25 +1,23 @@
-import { Container, Row, Col } from "react-bootstrap";
-import SideBar from "../components/SideBar";
-import styled from "../styles/sidebar.module.css";
+import styled from "../styles/layout.module.scss";
+import { Layout } from "antd";
 
 type LayoutProps = {
   children: React.ReactNode;
 };
 
-const Layout = (props: LayoutProps) => {
-  return <Container className="mt-5">{props.children}</Container>;
-  // return (
-  //   <Container fluid>
-  //     <Row>
-  //       <Col xs={2} id={styled.sidebarWrapper}>
-  //         <SideBar />
-  //       </Col>
-  //       <Col xs={10} id={styled.pageContentWrapper}>
-  //         {props.children}
-  //       </Col>
-  //     </Row>
-  //   </Container>
-  // );
+const { Header, Footer, Sider, Content } = Layout;
+
+const LayoutPage = (props: LayoutProps) => {
+  return (
+    <Layout>
+      {/* <Header className={styled.header}></Header> */}
+      <Layout>
+        {/* <Sider collapsible className={styled.sider}></Sider> */}
+        <Content className={styled.content}>{props.children}</Content>
+      </Layout>
+      <Footer className={styled.footer}></Footer>
+    </Layout>
+  );
 };
 
-export default Layout;
+export default LayoutPage;

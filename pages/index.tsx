@@ -1,10 +1,9 @@
 import type { NextPage } from "next";
 import { useState, useEffect } from "react";
-import styled from "../styles/Audiorecorder.module.css";
+import styled from "../styles/Audiorecorder.module.scss";
 import useRecorder from "../hooks/useRecorder";
-import { Button, Row, Alert, ListGroup } from "react-bootstrap";
 import Layout from "../components/Layout";
-import { TimerEl, myTimer } from "../stores/timerStore";
+import { Button, Row, Alert, List, Avatar, Col, Space } from "antd";
 import { observer } from "mobx-react";
 
 type Message = { text: string; date: string };
@@ -80,61 +79,72 @@ const AudioRecorder = observer((props: AudioRecorderProps) => {
     // var text = "Example text to appear on clipboard";
 
     return (
-      <ListGroup>
-        {transcriptsText.map((msg, i) => (
-          <ListGroup.Item
-            action
-            onClick={() => {
-              copyToClipboard(msg.text);
-            }}
-            key={i}
-          >
-            {msg.date}: {msg.text}
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
+      <List
+        // header={<div>Header</div>}
+        // footer={<div>Footer</div>}
+        // itemLayout="horizontal"
+        bordered
+        dataSource={transcriptsText}
+        renderItem={(item) => (
+          <List.Item>
+            <List.Item.Meta
+              avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
+              title={<a href="https://ant.design">{item.date}</a>}
+              description={item.text}
+            />
+          </List.Item>
+        )}
+      />
     );
   };
 
   return (
     <div className={styled.recordControls}>
       {microphonePermissons === "denied" && (
-        <Alert key="denied" variant="warning">
-          <div>Вы отключили разрешение микрофона, запись не ведётся.</div>
-          <div>
-            <Alert.Link href="https://support.google.com/chrome/answer/2693767?hl=ru&co=GENIE.Platform%3DDesktop">
-              Как включить разрешение описано здесь
-            </Alert.Link>
-          </div>
-        </Alert>
+        <Alert
+          key="denied"
+          type="warning"
+          message={`Вы отключили разрешение микрофона, запись не ведётся. ${(
+            <a href="https://support.google.com/chrome/answer/2693767?hl=ru&co=GENIE.Platform%3DDesktop">
+              Здесь интсрукция
+            </a>
+          )}`}
+        />
       )}
-      <div className={styled.controlButtons}>
-        <Button onClick={startRecording} disabled={isRecording}>
-          Начать запись
-        </Button>
-        <Button
-          variant="secondary"
-          onClick={stopRecording}
-          disabled={!isRecording}
-        >
-          Закончить запись
-        </Button>
-        {/* <TimerEl /> */}
-        <Button
-          variant="secondary"
-          onClick={() => {
-            copyToClipboard(
-              props.transcriptsText.map((b) => b.text).join(", ")
-            );
-          }}
-          // disabled={}
-        >
-          Скопировать весь текст
-        </Button>
-      </div>
-      <div>
-        {props.transcriptsText && audioTranscript(props.transcriptsText)}
-      </div>
+      <Col>
+        <Space direction="vertical">
+          <div className={styled.controlButtons}>
+            <Button
+              type="primary"
+              onClick={startRecording}
+              disabled={isRecording}
+            >
+              Начать запись
+            </Button>
+            <Button
+              type="danger"
+              onClick={stopRecording}
+              disabled={!isRecording}
+            >
+              Закончить запись
+            </Button>
+            {/* <TimerEl /> */}
+            <Button
+              onClick={() => {
+                copyToClipboard(
+                  props.transcriptsText.map((b) => b.text).join(", ")
+                );
+              }}
+              // disabled={}
+            >
+              Скопировать весь текст
+            </Button>
+          </div>
+          <div>
+            {props.transcriptsText && audioTranscript(props.transcriptsText)}
+          </div>
+        </Space>
+      </Col>
     </div>
   );
 });
@@ -145,13 +155,11 @@ const Home: NextPage = () => {
   return (
     <>
       <Layout>
-        <Row className="justify-content-md-center">
-          <div className="bg-light border">
-            <AudioRecorder
-              setTranscriptsText={setTranscriptsText}
-              transcriptsText={transcriptsText}
-            />
-          </div>
+        <Row justify="center">
+          <AudioRecorder
+            setTranscriptsText={setTranscriptsText}
+            transcriptsText={transcriptsText}
+          />
         </Row>
       </Layout>
     </>

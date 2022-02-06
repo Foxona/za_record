@@ -8,7 +8,7 @@ const nextConfig = {
         destination: 'https://renamon.fedorg.net/speech' // Proxy to Backend
       }
     ]
-  }
+  },
 }
 
 module.exports = nextConfig

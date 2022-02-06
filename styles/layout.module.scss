@@ -1,0 +1,25 @@
+@import "./scssVariables.scss";
+
+.layout {
+  min-height: 100vh;
+}
+
+.content {
+  min-height: 100vh;
+}
+
+.footer {
+  position: sticky;
+  bottom: 0;
+  // background-color: $mainColor;
+}
+
+.header {
+  // position: sticky;
+  // top: 0;
+  // background-color: $mainColor;
+}
+
+.sider {
+  // background-color: $mainColor;
+}
