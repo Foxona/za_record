@@ -6,20 +6,19 @@
 
 .content {
   min-height: 100vh;
+  margin: 2em 10em;
 }
 
 .footer {
   position: sticky;
   bottom: 0;
-  // background-color: $mainColor;
 }
 
 .header {
-  // position: sticky;
-  // top: 0;
-  // background-color: $mainColor;
+  position: relative;
+  display: flex;
+  justify-content: end;
 }
 
 .sider {
-  // background-color: $mainColor;
 }
