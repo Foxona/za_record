@@ -28,7 +28,7 @@ const HeaderContent = () => {
           <Menu.Item key={"2"} disabled>
             <Link href="/login">Авторизоваться</Link>
           </Menu.Item>
-          <Menu.Item key={"3"}>
+          <Menu.Item key={"3"} disabled>
             <Link href="/registration">Зарегистрироваться</Link>
           </Menu.Item>
           {/* <Menu.Item key={"4"}>

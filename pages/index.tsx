@@ -5,6 +5,7 @@ import useRecorder from "../hooks/useRecorder";
 import Layout from "../components/Layout";
 import { Button, Row, Alert, List, Avatar, Col, Space } from "antd";
 import { observer } from "mobx-react";
+import { myTimer } from "../stores/timerStore";
 
 type Message = { text: string; date: string };
 type AudioRecorderProps = {
@@ -24,21 +25,17 @@ const copyToClipboard = (text: string) => {
 };
 
 const unixTimeToDate = (uniseconds: number) => {
-  console.log(uniseconds);
-  let unix_timestamp = uniseconds;
-  var date = new Date(unix_timestamp * 1000);
-  // Hours part from the timestamp
-  var hours = date.getHours();
-  // Minutes part from the timestamp
-  var minutes = "0" + date.getMinutes();
-  // Seconds part from the timestamp
-  var seconds = "0" + date.getSeconds();
+  var date = new Date(uniseconds * 1000);
+  var year = date.getFullYear();
+  var month = ("0" + (date.getMonth() + 1)).substr(-2);
+  var day = ("0" + date.getDate()).substr(-2);
+  var hour = ("0" + date.getHours()).substr(-2);
+  var minutes = ("0" + date.getMinutes()).substr(-2);
+  var seconds = ("0" + date.getSeconds()).substr(-2);
 
-  // Will display time in 10:30:23 format
-  var formattedTime =
-    hours + ":" + minutes.substr(-2) + ":" + seconds.substr(-2);
-
-  return formattedTime;
+  return (
+    year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds
+  );
 };
 
 const AudioRecorder = observer((props: AudioRecorderProps) => {
@@ -80,16 +77,13 @@ const AudioRecorder = observer((props: AudioRecorderProps) => {
 
     return (
       <List
-        // header={<div>Header</div>}
-        // footer={<div>Footer</div>}
-        // itemLayout="horizontal"
         bordered
         dataSource={transcriptsText}
         renderItem={(item) => (
           <List.Item>
             <List.Item.Meta
               avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-              title={<a href="https://ant.design">{item.date}</a>}
+              title={item.date}
               description={item.text}
             />
           </List.Item>
@@ -114,13 +108,17 @@ const AudioRecorder = observer((props: AudioRecorderProps) => {
       <Col>
         <Space direction="vertical">
           <div className={styled.controlButtons}>
-            <Button
-              type="primary"
-              onClick={startRecording}
-              disabled={isRecording}
-            >
-              Начать запись
-            </Button>
+            {
+              <Button
+                type="primary"
+                onClick={startRecording}
+                disabled={isRecording}
+              >
+                {myTimer.timerStarted
+                  ? `${myTimer.secondsPassed}/13`
+                  : "Начать запись"}
+              </Button>
+            }
             <Button
               type="danger"
               onClick={stopRecording}
@@ -135,9 +133,16 @@ const AudioRecorder = observer((props: AudioRecorderProps) => {
                   props.transcriptsText.map((b) => b.text).join(", ")
                 );
               }}
-              // disabled={}
             >
-              Скопировать весь текст
+              Скопировать всё
+            </Button>
+            <Button
+              href={`data:text/json;charset=utf-8,${encodeURIComponent(
+                JSON.stringify(props.transcriptsText)
+              )}`}
+              download="messages.json"
+            >
+              {`Лог сообщений`}
             </Button>
           </div>
           <div>

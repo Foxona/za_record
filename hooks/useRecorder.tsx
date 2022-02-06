@@ -25,12 +25,14 @@ const useRecorder = () => {
 
     // Manage recorder state.
     if (isRecording) {
+      myTimer.timerStarted = true;
       const interval = window.setInterval(() => {
         myTimer.increase();
       }, 1000);
       setIntervalId(interval);
       recorder.start();
     } else {
+      myTimer.timerStarted = false;
       myTimer.reset();
       clearInterval(intervalId);
       recorder.stop();

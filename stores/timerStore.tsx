@@ -7,6 +7,7 @@ type TimerProps = {
 
 class Timer {
   secondsPassed = 0;
+  timerStarted = false;
 
   constructor() {
     makeAutoObservable(this);
