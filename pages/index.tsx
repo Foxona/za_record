@@ -4,7 +4,8 @@ import styled from "../styles/Audiorecorder.module.css";
 import useRecorder from "../hooks/useRecorder";
 import { Button, Row, Alert, ListGroup } from "react-bootstrap";
 import Layout from "../components/Layout";
-import SideBar from "../components/SideBar";
+import { TimerEl, myTimer } from "../stores/timerStore";
+import { observer } from "mobx-react";
 
 type Message = { text: string; date: string };
 type AudioRecorderProps = {
@@ -41,17 +42,14 @@ const unixTimeToDate = (uniseconds: number) => {
   return formattedTime;
 };
 
-const AudioRecorder = (props: AudioRecorderProps) => {
+const AudioRecorder = observer((props: AudioRecorderProps) => {
   let {
-    audioURL,
     isRecording,
     startRecording,
     stopRecording,
     blob,
     microphonePermissons,
   } = useRecorder();
-
-  console.log(props.transcriptsText);
 
   useEffect(() => {
     if (blob) {
@@ -121,6 +119,7 @@ const AudioRecorder = (props: AudioRecorderProps) => {
         >
           Закончить запись
         </Button>
+        {/* <TimerEl /> */}
         <Button
           variant="secondary"
           onClick={() => {
@@ -138,14 +137,13 @@ const AudioRecorder = (props: AudioRecorderProps) => {
       </div>
     </div>
   );
-};
+});
 
 const Home: NextPage = () => {
   const [transcriptsText, setTranscriptsText] = useState<Message[]>([]);
 
   return (
     <>
-      {/* <SideBar /> */}
       <Layout>
         <Row className="justify-content-md-center">
           <div className="bg-light border">

@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import useInterval from "./useInterval";
+import { myTimer } from "../stores/timerStore";
 
 const useRecorder = () => {
   const [audioURL, setAudioURL] = useState("");
@@ -7,8 +7,11 @@ const useRecorder = () => {
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const [blob, setBlob] = useState<Blob | null>(null);
   const [microphonePermissons, setMicrophonePermissons] = useState<string>("");
+  const [intervalId, setIntervalId] = useState<number>();
+  const [timerIsOut, setTimerIsOut] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log(isRecording);
     // Lazily obtain recorder first time we're recording.
     if (recorder === null) {
       if (isRecording) {
@@ -22,20 +25,16 @@ const useRecorder = () => {
 
     // Manage recorder state.
     if (isRecording) {
+      const interval = setInterval(() => {
+        myTimer.increase();
+      }, 1000);
+      setIntervalId(interval);
       recorder.start();
     } else {
+      myTimer.reset();
+      clearInterval(intervalId);
       recorder.stop();
     }
-
-    // console.log(isRecording);
-    // useInterval(() => {}, 3000)
-
-    // const interval = setInterval(() => {
-    //   recorder.state !== "inactive" && recorder.stop();
-    //   recorder.start();
-    // }, 3000); // max 15s media file
-
-    // !isRecording && clearInterval(interval);
 
     // Obtain the audio when ready.
     const handleData = (e: BlobEvent) => {
@@ -47,6 +46,14 @@ const useRecorder = () => {
     return () => recorder.removeEventListener("dataavailable", handleData);
   }, [recorder, isRecording]);
 
+  // useEffect(() => {
+  if (myTimer.secondsPassed > 13) {
+    recorder?.stop();
+    recorder?.start();
+    myTimer.reset();
+  }
+  // }, [myTimer]);
+
   const startRecording = () => {
     setIsRecording(true);
   };
@@ -54,6 +61,7 @@ const useRecorder = () => {
   const stopRecording = () => {
     setIsRecording(false);
   };
+
   return {
     audioURL,
     isRecording,
@@ -61,6 +69,7 @@ const useRecorder = () => {
     stopRecording,
     blob,
     microphonePermissons,
+    recorder,
   };
 };
 
