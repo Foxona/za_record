@@ -2,17 +2,17 @@ import { Button, Checkbox, Form, Input, Row } from "antd";
 import Layout from "../components/Layout";
 
 const Registration = () => {
-  const onFinish = (values) => {
-    console.log("Success:", values);
-  };
+  // const onFinish = (values) => {
+  //   console.log("Success:", values);
+  // };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
+  // const onFinishFailed = (errorInfo) => {
+  //   console.log("Failed:", errorInfo);
+  // };
 
   return (
     <Layout>
-      <Row justify="center">
+      {/* <Row justify="center">
         <Form
           name="basic"
           labelCol={{
@@ -76,7 +76,7 @@ const Registration = () => {
             </Button>
           </Form.Item>
         </Form>
-      </Row>
+      </Row> */}
     </Layout>
   );
 };

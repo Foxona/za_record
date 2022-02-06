@@ -120,13 +120,12 @@ const AudioRecorder = observer((props: AudioRecorderProps) => {
               </Button>
             }
             <Button
-              type="danger"
+              danger
               onClick={stopRecording}
               disabled={!isRecording}
             >
               Закончить запись
             </Button>
-            {/* <TimerEl /> */}
             <Button
               onClick={() => {
                 copyToClipboard(
